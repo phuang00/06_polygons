@@ -231,7 +231,7 @@ void add_torus( struct matrix * polygons,
                 double r1, double r2, int steps ) {
 
   struct matrix *points = generate_torus(cx, cy, cz, r1, r2, steps);
-  int index, lat, longt, p0, p1, p2;
+  int index, lat, longt, p0, p1, p2, p3, p4, p5;
   int latStop, longStop, latStart, longStart;
   latStart = 0;
   latStop = steps;
@@ -240,20 +240,31 @@ void add_torus( struct matrix * polygons,
 
   for ( lat = latStart; lat < latStop; lat++ ) {
     for ( longt = longStart; longt < longStop; longt++ ) {
-
       index = lat * steps + longt;
       p0 = index;
-      p1 = (index+steps) % points->lastcol;
-      p2 = (index+steps+1) % points->lastcol;
+      p1 = (index+steps);
+      p2 = (index+steps+1);
+      p3 = index;
+      p4 = (index+steps+1);
+      p5 = (index+1);
+      if (longt == steps-1){
+        p2 -= steps;
+        p4 -= steps;
+        p5 -= steps;
+      }
+      p1 %= points->lastcol;
+      p2 %= points->lastcol;
+      p4 %= points->lastcol;
+      p5 %= points->lastcol;
       add_polygon(polygons, points->m[0][p0], points->m[1][p0], points->m[2][p0],
                             points->m[0][p1], points->m[1][p1], points->m[2][p1],
                             points->m[0][p2], points->m[1][p2], points->m[2][p2]);
-      p0 = index;
-      p1 = (index+steps+1) % points->lastcol;
-      p2 = (index+1) % points->lastcol;
-      add_polygon(polygons, points->m[0][p0], points->m[1][p0], points->m[2][p0],
-                            points->m[0][p1], points->m[1][p1], points->m[2][p1],
-                            points->m[0][p2], points->m[1][p2], points->m[2][p2]);
+      printf("A: %d %d %d\n", p0, p1, p2);
+      printf("B: %d %d %d\n", p3, p4, p5);
+      printf("%d\n", points->lastcol);
+      add_polygon(polygons, points->m[0][p3], points->m[1][p3], points->m[2][p3],
+                            points->m[0][p4], points->m[1][p4], points->m[2][p4],
+                            points->m[0][p5], points->m[1][p5], points->m[2][p5]);
 
 
     }
