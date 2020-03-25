@@ -99,7 +99,7 @@ void parse_file ( char * filename,
     double theta;
     char axis;
     int type;
-    int steps_3d = 20;
+    int steps_3d = 10;
     int steps_2d = 100;
 
     if ( strncmp(line, "box", strlen(line)) == 0 ) {
@@ -119,7 +119,7 @@ void parse_file ( char * filename,
 
       sscanf(line, "%lf %lf %lf %lf",
        xvals, yvals, zvals, &r);
-      add_sphere( edges, xvals[0], yvals[0], zvals[0], r, steps_3d);
+      add_sphere( polygons, xvals[0], yvals[0], zvals[0], r, steps_3d);
     }//end of sphere
 
     else if ( strncmp(line, "torus", strlen(line)) == 0 ) {
@@ -221,6 +221,7 @@ void parse_file ( char * filename,
     else if ( strncmp(line, "clear", strlen(line)) == 0 ) {
       //printf("clear\t%s", line);
       edges->lastcol = 0;
+      polygons->lastcol = 0;
     }//end clear
 
     else if ( strncmp(line, "ident", strlen(line)) == 0 ) {
