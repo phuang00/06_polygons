@@ -6,6 +6,7 @@
 #include "draw.h"
 #include "matrix.h"
 #include "math.h"
+#include "gmath.h"
 
 
 /*======== void add_polygon() ==========
@@ -44,10 +45,12 @@ void add_polygon( struct matrix *polygons,
 void draw_polygons( struct matrix *polygons, screen s, color c ) {
   int i;
   for (i = 0; i < polygons->lastcol; i+=3){
-    draw_line(polygons->m[0][i], polygons->m[1][i], polygons->m[0][i+1], polygons->m[1][i+1], s, c);
-    draw_line(polygons->m[0][i+1], polygons->m[1][i+1], polygons->m[0][i+2], polygons->m[1][i+2], s, c);
-    draw_line(polygons->m[0][i+2], polygons->m[1][i+2], polygons->m[0][i], polygons->m[1][i], s, c);
-
+    double *normal = calculate_normal(polygons, i);
+    if (normal[2] > 0){
+      draw_line(polygons->m[0][i], polygons->m[1][i], polygons->m[0][i+1], polygons->m[1][i+1], s, c);
+      draw_line(polygons->m[0][i+1], polygons->m[1][i+1], polygons->m[0][i+2], polygons->m[1][i+2], s, c);
+      draw_line(polygons->m[0][i+2], polygons->m[1][i+2], polygons->m[0][i], polygons->m[1][i], s, c);
+    }
   }
 }
 
@@ -259,9 +262,6 @@ void add_torus( struct matrix * polygons,
       add_polygon(polygons, points->m[0][p0], points->m[1][p0], points->m[2][p0],
                             points->m[0][p1], points->m[1][p1], points->m[2][p1],
                             points->m[0][p2], points->m[1][p2], points->m[2][p2]);
-      printf("A: %d %d %d\n", p0, p1, p2);
-      printf("B: %d %d %d\n", p3, p4, p5);
-      printf("%d\n", points->lastcol);
       add_polygon(polygons, points->m[0][p3], points->m[1][p3], points->m[2][p3],
                             points->m[0][p4], points->m[1][p4], points->m[2][p4],
                             points->m[0][p5], points->m[1][p5], points->m[2][p5]);
